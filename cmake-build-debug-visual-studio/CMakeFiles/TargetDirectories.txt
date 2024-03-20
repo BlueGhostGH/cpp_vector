@@ -1,0 +1,3 @@
+C:/Coding/cpp_vector/cmake-build-debug-visual-studio/CMakeFiles/test_runner.dir
+C:/Coding/cpp_vector/cmake-build-debug-visual-studio/CMakeFiles/edit_cache.dir
+C:/Coding/cpp_vector/cmake-build-debug-visual-studio/CMakeFiles/rebuild_cache.dir
