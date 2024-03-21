@@ -1,4 +1,5 @@
 #include "iostream"
+#include "optional"
 #include "assert.h"
 
 #include "vector.h"
@@ -37,6 +38,10 @@ int main() {
     assert(second_vec.is_empty());
 
     std::cout << "Validated is_empty" << std::endl;
+
+    assert(second_vec.pop() == std::nullopt);
+
+    std::cout << "Validated safety of pop";
 
     auto third_vec = Vector(3, 4);
 

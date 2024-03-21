@@ -142,17 +142,23 @@ public:
         this->len = 0;
     }
 
-    std::optional<T&> operator[](size_t idx)
+    T& operator[](size_t idx) const
     {
-        if (idx >= this->len)
-        {
-            return std::nullopt;
-        }
-        else
-        {
-            return *(this->buf + idx);
-        }
+        return *(this->buf + idx);
     }
+
+    // TODO: to be figured out...
+//    std::optional<T&> get(size_t idx) const
+//    {
+//        if (idx >= this->len)
+//        {
+//            return std::nullopt;
+//        }
+//        else
+//        {
+//            return this[idx];
+//        }
+//    }
 };
 
 // This MAY overflow
