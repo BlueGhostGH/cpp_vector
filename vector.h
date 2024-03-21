@@ -15,9 +15,55 @@ private:
     size_t cap;
 
     static constexpr size_t MIN_NON_ZERO_CAP = 8;
-
 public:
     Vector() : buf(nullptr), len(0), cap(0) {}
+
+    Vector(std::initializer_list<T> init_list) : buf(nullptr), len(0), cap(0)
+    {
+        reserve(next_power_of_two(init_list.size()));
+
+        for (const auto& elem : init_list)
+        {
+            push(elem);
+        }
+    }
+
+    Vector(size_t len) : buf(nullptr), len(0), cap(0)
+    {
+        reserve(next_power_of_two(len));
+
+        for (size_t i = 0; i < len; i++)
+        {
+            push(T());
+        }
+    }
+
+    Vector(size_t len, const T& elem) : buf(nullptr), len(0), cap(0)
+    {
+        reserve(next_power_of_two(len));
+
+        for (size_t i = 0; i < len; i++)
+        {
+            push(elem);
+        }
+    }
+
+    Vector(const Vector& other) : buf(nullptr), len(0), cap(0)
+    {
+        reserve(other.cap);
+
+        for (size_t i = 0; i < other.len; i++)
+        {
+            push(other[i]);
+        }
+    }
+
+    Vector(Vector&& other) noexcept : buf(other.buf), len(other.len), cap(other.cap)
+    {
+        other.buf = nullptr;
+        other.len = 0;
+        other.cap = 0;
+    }
 
     ~Vector()
     {
@@ -74,5 +120,16 @@ public:
         }
     }
 };
+
+// This MAY overflow
+size_t next_power_of_two(size_t number)
+{
+    if (number <= 1)
+    {
+        return 1;
+    }
+
+    return std::numeric_limits<size_t>::max() >> std::countl_zero(number - 1) + 1;
+}
 
 #endif // VECTOR_H
