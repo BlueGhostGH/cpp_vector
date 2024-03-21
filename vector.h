@@ -16,7 +16,7 @@ private:
 
     static constexpr size_t MIN_NON_ZERO_CAP = 8;
 public:
-    Vector() : buf(nullptr), len(0), cap(0) {}
+    Vector() noexcept : buf(nullptr), len(0), cap(0) {}
 
     Vector(std::initializer_list<T> init_list) : buf(nullptr), len(0), cap(0)
     {
@@ -96,6 +96,21 @@ public:
         }
     }
 
+    size_t length() const noexcept
+    {
+        return this->len;
+    }
+
+    size_t capacity() const noexcept
+    {
+        return this->capacity();
+    }
+
+    bool is_empty() const noexcept
+    {
+        return this->len == 0;
+    }
+
     void push(T value)
     {
         if (this->len == this->cap)
@@ -107,7 +122,7 @@ public:
         this->len += 1;
     }
 
-    std::optional<T> pop_back()
+    std::optional<T> pop_back() noexcept
     {
         if (this->len == 0)
         {
@@ -118,6 +133,11 @@ public:
             this->len -= 1;
             return *(this->buf + this->len);
         }
+    }
+
+    void clear() noexcept
+    {
+        this->len = 0;
     }
 };
 
