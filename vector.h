@@ -103,7 +103,7 @@ public:
 
     size_t capacity() const noexcept
     {
-        return this->capacity();
+        return this->cap;
     }
 
     bool is_empty() const noexcept
@@ -122,7 +122,7 @@ public:
         this->len += 1;
     }
 
-    std::optional<T> pop_back() noexcept
+    std::optional<T> pop() noexcept
     {
         if (this->len == 0)
         {
