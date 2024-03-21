@@ -6,6 +6,8 @@
 #include "algorithm"
 #include "optional"
 
+size_t next_power_of_two(size_t number);
+
 template <typename T>
 class Vector
 {
