@@ -4,6 +4,8 @@
 
 #include "vector.h"
 
+struct Unit {};
+
 int main() {
     auto first_vec = Vector<int>();
 
@@ -52,6 +54,12 @@ int main() {
     assert(third_vec.capacity() == 8);
 
     std::cout << "Validated length-and-value ctor" << std::endl;
+
+    auto fourth_vec = Vector<Unit>();
+
+    assert(fourth_vec.capacity() == std::numeric_limits<size_t>::max());
+
+    std::cout << "Validated handling of empty types" << std::endl;
 
     return 0;
 }

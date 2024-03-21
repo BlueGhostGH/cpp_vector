@@ -4,6 +4,7 @@
 #include "cstdlib"
 #include "type_traits"
 #include "algorithm"
+#include "stdexcept"
 #include "optional"
 
 size_t next_power_of_two(size_t number);
@@ -73,23 +74,31 @@ public:
     }
 
     // Reserves capacity for at least additional elements
-    // After calling, capacity will be >= length + additional
+    // After calling, `cap` will be `>= length + additional`
     // Does nothing if capacity is sufficient
     void reserve(size_t additional)
     {
-        if (additional > this->cap - this->len)
+        if (additional > this->capacity() - this->len)
         {
             if (std::is_empty<T>())
             {
-                // This shouldn't happen as we return std::numeric_limits<size_t>::max()
-                // When sizeof(T) = 0, so if we reach this point
-                // Something has gone terribly wrong
+                // This shouldn't happen as we return `std::numeric_limits<size_t>::max()`
+                // When calling capacity()` with empty types
+                // So if we reach this point something has gone terribly wrong
                 std::abort();
             }
 
             // TODO: Check for overflow
             auto required_cap = this->len + additional;
+            // The doubling cannot overflow because
+            // `cap <= std::numeric_limits<ptrdiff_t>::max()`
+            // And `cap` is a `size_t` (unsigned version of `ptrdiff_t`)
             this->cap = std::max({this->cap * 2, required_cap, MIN_NON_ZERO_CAP});
+
+            if (this->cap > std::numeric_limits<ptrdiff_t>::max())
+            {
+                throw std::length_error("vector capacity has overflown");
+            }
 
             auto alloc = new T[cap];
             std::copy_n(this->buf, len, alloc);
@@ -105,7 +114,14 @@ public:
 
     size_t capacity() const noexcept
     {
-        return this->cap;
+        if (std::is_empty<T>())
+        {
+            return std::numeric_limits<size_t>::max();
+        }
+        else
+        {
+            return this->cap;
+        }
     }
 
     bool is_empty() const noexcept
@@ -142,7 +158,7 @@ public:
         this->len = 0;
     }
 
-    T& operator[](size_t idx) const
+    T& operator[](size_t idx) /* const */ // TODO: Is it?
     {
         return *(this->buf + idx);
     }
@@ -161,7 +177,10 @@ public:
 //    }
 };
 
-// This MAY overflow
+// This CAN overflow
+// It's probably best to make this
+// `one_less_than_next_power_of_two`
+// And add 1 at call site, checking for overflows
 size_t next_power_of_two(size_t number)
 {
     if (number <= 1)
